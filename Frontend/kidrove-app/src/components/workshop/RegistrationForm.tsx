@@ -7,24 +7,48 @@ export default function RegistrationForm() {
     const [errors, setErrors] = useState<Record<string, string>>({});
     const [submitted, setSubmitted] = useState(false);
 
+    const [serverError, setServerError] = useState("");
+    const [submitting, setSubmitting] = useState(false);
+
     const validate = () => {
         const e: Record<string, string> = {};
         if (!form.name.trim()) e.name = "Name is required";
         if (!form.email.trim()) e.email = "Email is required";
-        else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) e.email = "Enter a valid email";
+        else if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(form.email)) e.email = "Enter a valid email";
         if (!form.phone.trim()) e.phone = "Phone number is required";
-        else if (!/^\+?[\d\s\-()]{7,15}$/.test(form.phone)) e.phone = "Enter a valid phone number";
+        else if (!/^[6789]\d{9}$/.test(form.phone)) e.phone = "Enter a valid 10-digit Indian phone number";
         return e;
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        setServerError("");
         const errs = validate();
         if (Object.keys(errs).length > 0) {
             setErrors(errs);
             return;
         }
-        setSubmitted(true);
+
+        setSubmitting(true);
+        try {
+            const response = await fetch("http://localhost:5000/api/enquiry", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(form)
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.message || "Failed to submit enquiry");
+            }
+
+            setSubmitted(true);
+        } catch (err: any) {
+            setServerError(err.message || "An unexpected error occurred. Please try again.");
+        } finally {
+            setSubmitting(false);
+        }
     };
 
     if (submitted) {
@@ -41,6 +65,11 @@ export default function RegistrationForm() {
 
     return (
         <form onSubmit={handleSubmit} className="space-y-4" noValidate>
+            {serverError && (
+                <div className="p-3 text-sm text-red-700 bg-red-50 rounded-lg border border-red-200">
+                    {serverError}
+                </div>
+            )}
             <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="reg-name">Full Name</label>
                 <input
@@ -77,10 +106,15 @@ export default function RegistrationForm() {
                 <input
                     id="reg-phone"
                     type="tel"
+                    maxLength={10}
                     data-testid="input-phone"
-                    placeholder="+91 98765 43210"
+                    placeholder="9876543210"
                     value={form.phone}
-                    onChange={e => { setForm(f => ({ ...f, phone: e.target.value })); setErrors(ev => ({ ...ev, phone: "" })); }}
+                    onChange={e => {
+                        const numericValue = e.target.value.replace(/\D/g, '');
+                        setForm(f => ({ ...f, phone: numericValue }));
+                        setErrors(ev => ({ ...ev, phone: "" }));
+                    }}
                     className="w-full px-4 py-2.5 rounded-lg border text-sm focus:outline-none focus:ring-2 transition-all"
                     style={{ borderColor: errors.phone ? "#EF4444" : "#e5e7eb" }}
                 />
@@ -88,13 +122,13 @@ export default function RegistrationForm() {
             </div>
             <button
                 type="submit"
+                disabled={submitting}
                 data-testid="button-submit-registration"
-                className="w-full py-3 rounded-xl text-white text-sm font-bold transition-all hover:opacity-90 active:scale-95"
+                className="w-full py-3 rounded-xl text-white text-sm font-bold transition-all hover:opacity-90 active:scale-95 disabled:opacity-70 disabled:cursor-not-allowed"
                 style={{ backgroundColor: ORANGE }}
             >
-                Enroll Now
+                {submitting ? "Enrolling..." : "Enroll Now"}
             </button>
-            <p className="text-xs text-center text-gray-400">No payment collected yet. We'll contact you with details.</p>
         </form>
     );
 }
