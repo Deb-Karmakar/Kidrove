@@ -7,7 +7,7 @@ const ORANGE = "#FF6B35";
 function KidroveLogo() {
   return (
     <a href="https://kidrove.com">
-      <img src="/logo.jpeg" alt="Kidrove Logo" className="h-10 w-auto" />
+      <img src="/logo.jpeg" alt="Kidrove Logo" className="h-7 md:h-10 w-auto" />
     </a>
   );
 }
