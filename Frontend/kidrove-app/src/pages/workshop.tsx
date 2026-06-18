@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Calendar, Monitor, Users, CreditCard, Clock, CheckCircle2, Star } from "lucide-react";
+import { Calendar, Monitor, Users, CreditCard, Clock, CheckCircle2 } from "lucide-react";
 import Navbar, { KidroveLogo } from "@/components/layout/Navbar";
 import SectionHeader from "@/components/workshop/SectionHeader";
 import DetailChip from "@/components/workshop/DetailChip";

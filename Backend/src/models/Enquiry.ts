@@ -1,6 +1,14 @@
-const mongoose = require('mongoose');
+import mongoose, { Document, Schema } from 'mongoose';
 
-const enquirySchema = new mongoose.Schema({
+export interface IEnquiry extends Document {
+    name: string;
+    email: string;
+    phone: string;
+    createdAt?: Date;
+    updatedAt?: Date;
+}
+
+const enquirySchema: Schema = new mongoose.Schema({
     name: {
         type: String,
         required: [true, 'Please add a name']
@@ -25,4 +33,4 @@ const enquirySchema = new mongoose.Schema({
     timestamps: true
 });
 
-module.exports = mongoose.model('Enquiry', enquirySchema);
+export default mongoose.model<IEnquiry>('Enquiry', enquirySchema);
