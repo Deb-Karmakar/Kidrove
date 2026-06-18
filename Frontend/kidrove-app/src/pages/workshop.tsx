@@ -121,21 +121,26 @@ function FAQItem({ q, a, isOpen, onToggle }: { q: string; a: string; isOpen: boo
   return (
     <div className="border border-gray-200 rounded-xl bg-white overflow-hidden shadow-sm">
       <button
-        className="w-full flex items-center justify-between px-5 py-4 text-left hover:bg-gray-50 transition-colors"
+        className="w-full flex items-center justify-between px-5 py-4 text-left hover:bg-gray-50 transition-colors group"
         onClick={onToggle}
         data-testid={`button-faq-${q.slice(0, 20).replace(/\s/g, "-").toLowerCase()}`}
       >
-        <span className="text-sm font-semibold text-gray-900 pr-4">{q}</span>
-        <span className="flex-shrink-0 text-gray-400">
-          {isOpen ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+        <span className="text-sm font-semibold text-gray-900 pr-4 group-hover:text-teal-600 transition-colors">{q}</span>
+        <span className={`flex-shrink-0 text-gray-400 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`}>
+          <ChevronDown size={18} />
         </span>
       </button>
-      {isOpen && (
-        <div className="px-5 pb-4">
-          <div className="h-px bg-gray-100 mb-4" />
-          <p className="text-sm text-gray-600 leading-relaxed">{a}</p>
+      <div
+        className="grid transition-all duration-300 ease-in-out"
+        style={{ gridTemplateRows: isOpen ? "1fr" : "0fr" }}
+      >
+        <div className="overflow-hidden">
+          <div className="px-5 pb-4">
+            <div className="h-px bg-gray-100 mb-4" />
+            <p className="text-sm text-gray-600 leading-relaxed">{a}</p>
+          </div>
         </div>
-      )}
+      </div>
     </div>
   );
 }
@@ -230,7 +235,7 @@ function RegistrationForm() {
         className="w-full py-3 rounded-xl text-white text-sm font-bold transition-all hover:opacity-90 active:scale-95"
         style={{ backgroundColor: ORANGE }}
       >
-        Enroll Now — ₹2,999
+        Enroll Now
       </button>
       <p className="text-xs text-center text-gray-400">No payment collected yet. We'll contact you with details.</p>
     </form>
@@ -248,17 +253,11 @@ export default function WorkshopPage() {
     <div className="min-h-screen" style={{ backgroundColor: "#f4f7f9" }}>
       <Navbar />
 
-      {/* Breadcrumb */}
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-5 pb-1">
-        <p className="text-sm text-gray-500">
-          <span className="text-gray-400">←</span>{" "}
-          <a href="#" className="hover:underline" style={{ color: TEAL }}>Back to Workshops</a>
-        </p>
-      </div>
+
 
       {/* Main content */}
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-5">
-        <div className="flex flex-col lg:flex-row gap-8">
+        <div className="flex flex-col lg:flex-row gap-8 items-start">
 
           {/* LEFT COLUMN — main content */}
           <div className="flex-1 min-w-0 space-y-6">
@@ -268,52 +267,54 @@ export default function WorkshopPage() {
               <span className="px-3 py-1 rounded-full text-xs font-medium text-white" style={{ backgroundColor: TEAL }}>AI & Robotics</span>
               <span className="px-3 py-1 rounded-full text-xs font-medium text-white bg-blue-500">Online</span>
               <span className="px-3 py-1 rounded-full text-xs font-medium text-white" style={{ backgroundColor: ORANGE }}>Summer Workshop</span>
-              <span className="px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-700 border border-green-200">✓ Published</span>
             </div>
 
             {/* Hero Title */}
             <div>
-              <h1 className="text-3xl sm:text-4xl font-extrabold text-gray-900 leading-tight flex items-center gap-3 flex-wrap">
-                <Bot size={36} style={{ color: TEAL }} className="flex-shrink-0" />
+              <h1 className="text-3xl sm:text-4xl font-extrabold text-gray-900 leading-tight">
                 AI &amp; Robotics Summer Workshop
               </h1>
             </div>
 
             {/* Hero Banner */}
             <div
-              className="relative rounded-2xl overflow-hidden flex items-center justify-center"
-              style={{
-                background: `linear-gradient(135deg, #0d4f4a 0%, #1a8f82 40%, ${TEAL} 70%, #4dd9c8 100%)`,
-                minHeight: "280px",
-              }}
+              className="relative rounded-2xl overflow-hidden shadow-xl group"
+              style={{ minHeight: "360px" }}
               data-testid="hero-banner"
             >
-              <div className="text-center px-8 py-14">
-                <div className="flex justify-center mb-4">
-                  <div className="w-20 h-20 rounded-full bg-white/10 flex items-center justify-center border-2 border-white/30">
-                    <Bot size={44} className="text-white" />
-                  </div>
+              {/* Background Image */}
+              <img
+                src="/ai.jpg"
+                alt="AI Robotics Workshop"
+                className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+              />
+
+              {/* Gradient Overlay for Text Readability */}
+              <div
+                className="absolute inset-0"
+                style={{
+                  background: "linear-gradient(to right, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.4) 60%, rgba(0,0,0,0) 100%)",
+                }}
+              />
+
+              {/* Content */}
+              <div className="relative h-full flex flex-col justify-center px-8 py-14 md:pr-48">
+                <div className="flex items-center gap-3 font-bold text-white/90 mb-4 tracking-wider uppercase text-sm">
+                  <span className="w-10 h-1 bg-teal-400 rounded-full"></span>
+                  Online Summer Program
                 </div>
-                <h2 className="text-3xl sm:text-4xl font-extrabold text-white uppercase tracking-wide leading-tight drop-shadow-lg">
-                  AI &amp; Robotics
+
+                <h2 className="text-4xl sm:text-5xl font-extrabold text-white leading-tight drop-shadow-md">
+                  AI &amp; Robotics <br />
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-300 to-blue-400">Workshop</span>
                 </h2>
-                <h3 className="text-2xl sm:text-3xl font-extrabold text-white/90 uppercase tracking-widest mt-1 drop-shadow">
-                  Summer Workshop
-                </h3>
-                <p className="mt-4 text-white/80 text-sm sm:text-base font-medium max-w-md mx-auto leading-relaxed">
+
+                <p className="mt-5 text-white/90 text-base sm:text-lg font-medium max-w-lg leading-relaxed drop-shadow">
                   Build smart robots, learn AI fundamentals, and launch your tech journey — all from home this summer.
                 </p>
-                <div className="mt-6 flex flex-wrap gap-3 justify-center">
-                  <span className="bg-white/20 border border-white/30 text-white text-xs font-semibold px-3 py-1.5 rounded-full">Ages 8-14</span>
-                  <span className="bg-white/20 border border-white/30 text-white text-xs font-semibold px-3 py-1.5 rounded-full">4 Weeks Online</span>
-                  <span className="bg-white/20 border border-white/30 text-white text-xs font-semibold px-3 py-1.5 rounded-full">₹2,999</span>
-                </div>
+
+
               </div>
-              {/* Decorative stars */}
-              <Star size={14} className="absolute top-6 left-8 text-white/40 fill-white/20" />
-              <Star size={10} className="absolute top-10 right-14 text-white/30 fill-white/10" />
-              <Star size={16} className="absolute bottom-8 left-20 text-white/30 fill-white/10" />
-              <Star size={12} className="absolute bottom-6 right-8 text-white/40 fill-white/20" />
             </div>
 
             {/* Info chips */}
@@ -362,23 +363,7 @@ export default function WorkshopPage() {
               </div>
             </div>
 
-            {/* Workshop Stats */}
-            <div className="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm">
-              <SectionHeader>Workshop Insights</SectionHeader>
-              <div className="grid grid-cols-3 gap-4">
-                {[
-                  { icon: <Users size={20} />, value: "50", label: "Seats" },
-                  { icon: <CheckCircle2 size={20} />, value: "50", label: "Available" },
-                  { icon: <Star size={20} />, value: "4.9 / 5", label: "Avg Rating" },
-                ].map(({ icon, value, label }, i) => (
-                  <div key={i} className="text-center p-4 rounded-xl border border-gray-100 bg-gray-50">
-                    <div className="flex justify-center mb-2" style={{ color: TEAL }}>{icon}</div>
-                    <p className="text-xl font-extrabold text-gray-900">{value}</p>
-                    <p className="text-xs text-gray-500 mt-0.5">{label}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
+
 
             {/* FAQ */}
             <div id="faq" data-testid="section-faq">
@@ -398,49 +383,33 @@ export default function WorkshopPage() {
           </div>
 
           {/* RIGHT COLUMN — sidebar */}
-          <div className="lg:w-80 flex-shrink-0">
-            <div className="space-y-4">
+          <div className="w-full lg:w-[360px] flex-shrink-0">
+            <div className="space-y-6 lg:sticky lg:top-24 pb-8">
 
-              {/* Enroll card */}
-              <div className="bg-white rounded-2xl border border-gray-200 shadow-md overflow-hidden">
-                {/* Top band */}
-                <div className="px-5 py-4 text-white text-center" style={{ backgroundColor: TEAL }}>
-                  <p className="text-2xl font-extrabold">₹2,999</p>
-                  <p className="text-xs text-white/80 mt-0.5">One-time fee · Starts 15 July 2026</p>
+              {/* Secure Registration Card */}
+              <div id="register" className="bg-white rounded-3xl border border-gray-100 shadow-[0_8px_30px_rgb(0,0,0,0.08)] overflow-hidden" data-testid="section-registration">
+                <div className="relative border-b border-gray-100 overflow-hidden bg-gradient-to-br from-teal-50 to-blue-50 px-6 py-6 text-center">
+                  <div className="absolute -top-10 -right-10 w-24 h-24 bg-teal-200 rounded-full mix-blend-multiply filter blur-xl opacity-70"></div>
+                  <div className="absolute -bottom-10 -left-10 w-32 h-32 bg-orange-200 rounded-full mix-blend-multiply filter blur-xl opacity-60"></div>
+
+                  <div className="relative z-10">
+                    <p className="text-4xl font-extrabold text-gray-900 tracking-tight">₹2,999</p>
+                    <p className="mt-1 text-sm font-semibold text-teal-700">One-time enrollment fee</p>
+                  </div>
                 </div>
 
-                {/* Quick detail summary */}
-                <div className="px-5 py-4 border-b border-gray-100 space-y-2.5">
-                  {[
-                    { icon: <Users size={14} />, text: "Ages 8 – 14 years" },
-                    { icon: <Clock size={14} />, text: "4 weeks · Live online sessions" },
-                    { icon: <Monitor size={14} />, text: "Online · Starts 15 July 2026" },
-                    { icon: <CheckCircle2 size={14} />, text: "Certificate included" },
-                  ].map(({ icon, text }, i) => (
-                    <div key={i} className="flex items-center gap-2 text-sm text-gray-700">
-                      <span style={{ color: TEAL }}>{icon}</span>
-                      {text}
-                    </div>
-                  ))}
-                </div>
-
-                {/* CTA */}
-                <div className="px-5 py-4">
-                  <a
-                    href="#register"
-                    data-testid="button-enroll-now-top"
-                    className="block w-full py-3 rounded-xl text-white text-sm font-bold text-center transition-all hover:opacity-90 active:scale-95"
-                    style={{ backgroundColor: ORANGE }}
-                  >
-                    Enroll Now
-                  </a>
+                <div className="p-6">
+                  <div className="mb-5 text-center">
+                    <h2 className="text-xl font-extrabold text-gray-900">Secure Your Spot</h2>
+                    <p className="text-xs text-gray-500 mt-1">Fill details below. No upfront payment required.</p>
+                  </div>
+                  <RegistrationForm />
                 </div>
               </div>
 
               {/* Organizer card */}
-              <div className="bg-white rounded-2xl border border-gray-200 p-5 shadow-sm">
+              <div className="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm">
                 <div className="flex items-center gap-3 mb-1">
-                  <div className="w-4 h-4 rounded" style={{ backgroundColor: TEAL }} />
                   <h3 className="font-bold text-gray-900 text-sm">Workshop Organizer</h3>
                 </div>
                 <div className="mt-3 flex items-center gap-3">
@@ -453,29 +422,17 @@ export default function WorkshopPage() {
                   </div>
                 </div>
                 <p className="text-xs text-gray-500 mt-3 leading-relaxed">Specializing in STEM and technology workshops for children aged 5–18.</p>
-                <button
+                <a
+                  href="mailto:workshops@kidrove.com"
                   data-testid="button-contact-organizer"
-                  className="mt-3 w-full py-2 rounded-lg text-sm font-semibold text-white transition-all hover:opacity-90"
+                  className="mt-3 w-full py-2 rounded-lg text-sm font-semibold text-white transition-all hover:opacity-90 block text-center"
                   style={{ backgroundColor: TEAL }}
                 >
                   Contact
-                </button>
+                </a>
               </div>
 
-
-
             </div>
-          </div>
-        </div>
-
-        {/* Registration Form — full width below */}
-        <div id="register" className="mt-8 max-w-lg mx-auto" data-testid="section-registration">
-          <div className="bg-white rounded-2xl border border-gray-200 p-6 sm:p-8 shadow-md">
-            <div className="text-center mb-6">
-              <h2 className="text-2xl font-extrabold text-gray-900">Register for the Workshop</h2>
-              <p className="text-sm text-gray-500 mt-1">Fill in your details and we'll be in touch within 24 hours.</p>
-            </div>
-            <RegistrationForm />
           </div>
         </div>
       </div>
