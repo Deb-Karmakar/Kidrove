@@ -137,6 +137,3 @@ Success response: `201 Created`
 - `npm run preview` → preview production build
 - `npm run lint` → run ESLint
 
-## Notes
-- Backend has been migrated from `.js` source files to `.ts` source files in `Backend/src`.
-- Root `.gitignore` excludes `node_modules`, `dist`, and `.env` for cleaner commits.
